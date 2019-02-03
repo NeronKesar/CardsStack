@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Navigation } from 'react-native-navigation'
-import { registerScreens } from './utils/navigationService'
+import store from './redux/store'
+import registerScreens from './utils/navigationService'
 import Constants from './utils/Constants'
 
-registerScreens()
+registerScreens(store)
 
 export default class App extends Component {
   constructor(props) {

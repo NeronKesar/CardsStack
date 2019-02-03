@@ -7,12 +7,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "ramda": "^0.26.1",
     "react": "16.6.3",
     "react-native": "0.58.3",
     "react-native-navigation": "^1.1.485",
     "react-native-vector-icons": "^6.2.0",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1",
+    "redux-actions": "^2.6.4",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.0.0",
     "styled-components": "^4.1.3"

@@ -1,10 +1,13 @@
 import { Navigation } from 'react-native-navigation'
-import AllCardsScreen from '../screens/AllCardsScreen'
+import { Provider } from 'react-redux'
+import AllCardsContainer from '../containers/AllCardsContainer'
 import Constants from './Constants'
 
-export const registerScreens = () => {
+export default function registerScreens(store) {
   Navigation.registerComponent(
     Constants.screens.ALL_CARDS_SCREEN,
-    () => AllCardsScreen,
+    () => AllCardsContainer,
+    store,
+    Provider,
   )
 }

@@ -3,7 +3,7 @@ import { ActivityIndicator } from 'react-native'
 import styled from 'styled-components'
 import Constants from '../utils/Constants'
 import Header from '../components/Header'
-import CardsStack from '../components/CardsStack'
+import CardsStackContainer from '../containers/CardsStackContainer'
 
 const Container = styled.View`
   flex: 1;
@@ -37,7 +37,7 @@ class AllCardsScreen extends Component {
         </LoaderContainer>
       )
     } else {
-      return <CardsStack />
+      return <CardsStackContainer />
     }
   }
 

@@ -17,12 +17,19 @@ const Text = styled.Text`
 `
 const Button = styled.TouchableOpacity``
 
-const Header = () => {
+const Header = ({ undoActive, undoDisabled, onUndoPress }) => {
   return (
     <Container>
-      <Button>
+      <Button
+        disabled={undoDisabled}
+        onPress={onUndoPress}
+      >
         <Text
-          color={Constants.colors.RED}
+          color={
+            undoActive
+              ? Constants.colors.GRAY
+              : Constants.colors.RED
+          }
           size={18}
           weight={500}
         >

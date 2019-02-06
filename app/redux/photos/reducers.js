@@ -6,8 +6,11 @@ import {
   GET_PHOTOS_SUCCESS,
   GET_PHOTOS_FAILURE,
   MOVE_TO_TRASH_SUCCESS,
+  SET_TRASH,
   MOVE_TO_FAVORITES_SUCCESS,
+  SET_FAVORITES,
   MOVE_TO_HISTORY_SUCCESS,
+  SET_HISTORY,
 } from './actions'
 
 const photos = handleActions(
@@ -21,6 +24,7 @@ const photos = handleActions(
 const trash = handleActions(
   {
     [MOVE_TO_TRASH_SUCCESS]: (state, { payload }) => R.concat(state, [payload]),
+    [SET_TRASH]: (_, { payload }) => payload,
   },
   [],
 )
@@ -28,6 +32,7 @@ const trash = handleActions(
 const favorites = handleActions(
   {
     [MOVE_TO_FAVORITES_SUCCESS]: (state, { payload }) => R.concat(state, [payload]),
+    [SET_FAVORITES]: (_, { payload }) => payload,
   },
   [],
 )
@@ -35,6 +40,7 @@ const favorites = handleActions(
 const history = handleActions(
   {
     [MOVE_TO_HISTORY_SUCCESS]: (state, { payload }) => R.concat(state, [payload]),
+    [SET_HISTORY]: (_, { payload }) => payload,
   },
   [],
 )

@@ -7,11 +7,6 @@ export const getPhotos = R.pipe(
   R.prop('photos'),
 )
 
-export const getTrash = R.pipe(
-  getPhotosReducers,
-  R.prop('trash'),
-)
-
 export const getFavorites = R.pipe(
   getPhotosReducers,
   R.prop('favorites'),

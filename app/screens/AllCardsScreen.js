@@ -1,13 +1,17 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   ActivityIndicator,
   Animated,
   PanResponder,
+  NetInfo,
 } from 'react-native'
 import styled from 'styled-components'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import Constants from '../utils/Constants'
+import { getDate } from '../utils/functions'
 import Header from '../components/Header'
+import store from '../redux/store'
+import { setIsConnected } from '../redux/internet'
 
 const Container = styled.View`
   flex: 1;
@@ -25,10 +29,19 @@ const CardsContainer = styled.View`
   flex: 1;
 `
 
-const Card = styled.View`
-  flex: 1;
+const CardWrapper = styled.View`
   border-radius: 10;
-  background-color: ${({ color }) => color};
+  shadow-color: ${Constants.colors.BLACK};
+  shadow-opacity: 0.2;
+  shadow-radius: 20px;
+  shadow-offset: 0px 20px;
+  background-color: ${Constants.colors.WHITE};
+`
+
+const Card = styled.Image`
+  width: 100%;
+  height: 100%;
+  border-radius: 10;
 `
 
 const NoPhotos = styled.View`
@@ -43,7 +56,25 @@ const Text = styled.Text`
   color: ${Constants.colors.GRAY};
 `
 
-class AllCardsScreen extends Component {
+const TextPhotos = styled.Text`
+  font-size: ${({ size }) => size};
+  font-weight: ${({ weight }) => weight};
+  color: ${Constants.colors.WHITE};
+  position: absolute;
+  top: ${({ top }) => top}%;
+  left: 7%;
+`
+
+const BottomText = styled.Text`
+  font-size: 16;
+  font-weight: 300;
+  color: ${Constants.colors.DARK_GRAY};
+  position: absolute;
+  align-self: center;
+  bottom: 3%;
+`
+
+class AllCardsScreen extends PureComponent {
   static navigatorStyle = {
     navBarHidden: true,
   }
@@ -83,7 +114,22 @@ class AllCardsScreen extends Component {
   }
 
   componentDidMount() {
+    NetInfo.isConnected.addEventListener(
+      'connectionChange',
+      this.handleConnectivityChange,
+    )
     this.props.getPhotosRequest()
+  }
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener(
+      'connectionChange',
+      this.handleConnectivityChange,
+    )
+  }
+
+  handleConnectivityChange(isConnected) {
+    store.dispatch(setIsConnected(isConnected))
   }
 
   moveToTrash = () =>
@@ -139,7 +185,7 @@ class AllCardsScreen extends Component {
         </LoaderContainer>
       )
     } else {
-      const { photos } = this.props
+      const { photos, isLoading } = this.props
 
       return (
         <CardsContainer>
@@ -166,7 +212,9 @@ class AllCardsScreen extends Component {
                     }],
                   }}
                 >
-                  <Card color={photos[photos.length - 3].color} />
+                  <CardWrapper>
+                    <Card source={{ uri: photos[photos.length - 3].img_src }} />
+                  </CardWrapper>
                 </Animated.View>
               )
               : null
@@ -194,7 +242,30 @@ class AllCardsScreen extends Component {
                     }],
                   }}
                 >
-                  <Card color={photos[photos.length - 2].color} />
+                  <CardWrapper>
+                    <Card source={{ uri: photos[photos.length - 2].img_src }} />
+                  </CardWrapper>
+                  <TextPhotos
+                    size={24}
+                    weight={500}
+                    top={6}
+                  >
+                    Curiosity
+                  </TextPhotos>
+                  <TextPhotos
+                    size={16}
+                    weight={400}
+                    top={12}
+                  >
+                    {photos[photos.length - 2].camera.full_name}
+                  </TextPhotos>
+                  <TextPhotos
+                    size={16}
+                    weight={400}
+                    top={16}
+                  >
+                    {getDate(photos[photos.length - 2].earth_date)}
+                  </TextPhotos>
                 </Animated.View>
               )
               : null
@@ -218,10 +289,7 @@ class AllCardsScreen extends Component {
                       zIndex: 3,
                       marginTop: this.state.scale.interpolate({
                         inputRange: [-1, 0],
-                        outputRange: [
-                          `${isIphoneX() ? 7 : 7}%`,
-                          `${isIphoneX() ? 24 : 19}%`
-                        ]
+                        outputRange: ['7%', `${isIphoneX() ? 24 : 19}%`],
                       }),
                       alignSelf: 'center',
                       borderRadius: 10,
@@ -234,7 +302,30 @@ class AllCardsScreen extends Component {
                     }
                   ]}
                 >
-                  <Card color={photos[photos.length - 1].color} />
+                  <CardWrapper>
+                    <Card source={{ uri: photos[photos.length - 1].img_src }} />
+                  </CardWrapper>
+                  <TextPhotos
+                    size={24}
+                    weight={500}
+                    top={6}
+                  >
+                    Curiosity
+                  </TextPhotos>
+                  <TextPhotos
+                    size={16}
+                    weight={400}
+                    top={12}
+                  >
+                    {photos[photos.length - 1].camera.full_name}
+                  </TextPhotos>
+                  <TextPhotos
+                    size={16}
+                    weight={400}
+                    top={16}
+                  >
+                    {getDate(photos[photos.length - 1].earth_date)}
+                  </TextPhotos>
                 </Animated.View>
               )
               : (
@@ -249,17 +340,26 @@ class AllCardsScreen extends Component {
   }
 
   render() {
+    const { isLoading, photos, history } = this.props
+
     return (
       <Container>
         <Header
-          undoActive={this.props.history.length === 0}
+          undoActive={history.length === 0}
           undoDisabled={
-            this.props.history.length === 0
+            history.length === 0
             || this.state.userActionsDisabled
           }
           onUndoPress={this.handleUndo}
         />
         {this.renderContent()}
+        <BottomText>
+            {
+              isLoading
+                ? 'Downloading'
+                : `${photos.length} cards`
+            }
+          </BottomText>
       </Container>
     )
   }

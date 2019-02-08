@@ -9,6 +9,7 @@ class Colors {
   RED = '#e84c4d'
   BLACK = '#000000'
   GRAY = '#c9d2d7'
+  DARK_GRAY = '#778085'
 }
 
 export default class Constants {

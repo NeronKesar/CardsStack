@@ -8,9 +8,6 @@ export const GET_PHOTOS_SUCCESS = `${Constants.APP_NAME}/${moduleName}/GET_PHOTO
 export const GET_PHOTOS_FAILURE = `${Constants.APP_NAME}/${moduleName}/GET_PHOTOS_FAILURE`
 
 export const MOVE_TO_TRASH_REQUEST = `${Constants.APP_NAME}/${moduleName}/MOVE_TO_TRASH_REQUEST`
-export const MOVE_TO_TRASH_SUCCESS = `${Constants.APP_NAME}/${moduleName}/MOVE_TO_TRASH_SUCCESS`
-export const MOVE_TO_TRASH_FAILURE = `${Constants.APP_NAME}/${moduleName}/MOVE_TO_TRASH_FAILURE`
-export const SET_TRASH = `${Constants.APP_NAME}/${moduleName}/SET_TRASH`
 
 export const MOVE_TO_FAVORITES_REQUEST = `${Constants.APP_NAME}/${moduleName}/MOVE_TO_FAVORITES_REQUEST`
 export const MOVE_TO_FAVORITES_SUCCESS = `${Constants.APP_NAME}/${moduleName}/MOVE_TO_FAVORITES_SUCCESS`
@@ -31,9 +28,6 @@ export const getPhotosSuccess = createAction(GET_PHOTOS_SUCCESS)
 export const getPhotosFailure = createAction(GET_PHOTOS_FAILURE)
 
 export const moveToTrashRequest = createAction(MOVE_TO_TRASH_REQUEST)
-export const moveToTrashSuccess = createAction(MOVE_TO_TRASH_SUCCESS)
-export const moveToTrashFailure = createAction(MOVE_TO_TRASH_FAILURE)
-export const setTrash = createAction(SET_TRASH)
 
 export const moveToFavoritesRequest = createAction(MOVE_TO_FAVORITES_REQUEST)
 export const moveToFavoritesSuccess = createAction(MOVE_TO_FAVORITES_SUCCESS)

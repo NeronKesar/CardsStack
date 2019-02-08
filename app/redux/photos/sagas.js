@@ -7,47 +7,45 @@ import {
   call,
 } from 'redux-saga/effects'
 import * as R from 'ramda'
+import { Alert } from 'react-native'
 import store from '../store'
 import {
   GET_PHOTOS_REQUEST,
   getPhotosSuccess,
   getPhotosFailure,
   MOVE_TO_TRASH_REQUEST,
-  moveToTrashSuccess,
   moveToTrashFailure,
-  setTrash,
   MOVE_TO_FAVORITES_REQUEST,
   moveToFavoritesSuccess,
   moveToFavoritesFailure,
   setFavorites,
-  MOVE_TO_HISTORY_REQUEST,
   moveToHistorySuccess,
-  moveToHistoryFailure,
   setHistory,
   UNDO_REQUEST,
-  undoSuccess,
   undoFailure,
 } from './actions'
 import {
   getPhotos,
-  getTrash,
   getFavorites,
   getHistory,
 } from './selectors'
+import { getPhotosApi } from './managers'
+import { getIsConnected } from '../internet'
 
 const getPhotosSaga = function* () {
   try {
-    const array = [
-      { color: 'red' },
-      { color: 'green' },
-      { color: 'blue' },
-      { color: 'yellow' },
-      { color: 'orange' },
-      { color: 'purple' },
-    ]
+    yield delay(500)
+    const isConnected = yield select(getIsConnected)
 
-    yield delay(2000)
-    yield put(getPhotosSuccess(array))
+    if (isConnected) {
+      const response = yield call(getPhotosApi)
+
+      yield put(getPhotosSuccess(response.photos))
+
+    } else {
+      Alert.alert('Error', 'No internet connection')
+      yield put(getPhotosFailure())
+    }
 
   } catch (error) {
     yield put(getPhotosFailure(error))
@@ -60,7 +58,6 @@ const moveToTrashSaga = function* ({ payload: callback }) {
     const photos = [...photosStore]
     const lastPhoto = photos.pop()
 
-    yield put(moveToTrashSuccess(lastPhoto))
     yield put(moveToHistorySuccess(R.merge(lastPhoto, { category: 'trash' })))
     yield call(callback, () => store.dispatch(getPhotosSuccess(photos)))
 
@@ -87,8 +84,6 @@ const undoSaga = function* ({ payload: callback }) {
   try {
     const photosStore = yield select(getPhotos)
     const photos = [...photosStore]
-    const trashStore = yield select(getTrash)
-    const trash = [...trashStore]
     const favoritesStore = yield select(getFavorites)
     const favorites = [...favoritesStore]
     const historyStore = yield select(getHistory)
@@ -96,14 +91,12 @@ const undoSaga = function* ({ payload: callback }) {
     const item = history.pop()
 
     if (item.category === 'trash') {
-      photo = trash.pop()
-      photos.push(photo)
+      photos.push(item)
     } else {
-      photo = favorites.pop()
-      photos.push(photo)
+      favorites.pop()
+      photos.push(item)
     }
 
-    yield put(setTrash(trash))
     yield put(setFavorites(favorites))
     yield put(setHistory(history))
     yield put(getPhotosSuccess(photos))

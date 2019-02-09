@@ -6,7 +6,7 @@ import rootSaga from './rootSaga'
 
 const sagaMiddleWare = sagaMiddlewareFactory()
 
-const store = createStore(rootReducer, applyMiddleware(sagaMiddleWare, logger))
+const store = createStore(rootReducer, applyMiddleware(sagaMiddleWare))
 
 sagaMiddleWare.run(rootSaga)
 

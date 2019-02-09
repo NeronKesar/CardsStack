@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import {
   ActivityIndicator,
   Animated,
@@ -10,6 +10,8 @@ import { isIphoneX } from 'react-native-iphone-x-helper'
 import Constants from '../utils/Constants'
 import { getDate } from '../utils/functions'
 import Header from '../components/Header'
+import ButtonTrash from '../components/ButtonTrash'
+import ButtonFavorite from '../components/ButtonFavorite'
 import store from '../redux/store'
 import { setIsConnected } from '../redux/internet'
 
@@ -74,7 +76,7 @@ const BottomText = styled.Text`
   bottom: 3%;
 `
 
-class AllCardsScreen extends PureComponent {
+class AllCardsScreen extends Component {
   static navigatorStyle = {
     navBarHidden: true,
   }
@@ -100,13 +102,9 @@ class AllCardsScreen extends PureComponent {
           if (gestureState.dx >= -200 && gestureState.dx <= 200) {
             this.moveCard()
           } else if (gestureState.dx < -200) {
-            Animated
-              .timing(this.state.pan, { toValue: { x: -500, y: 0 }, duration: 200 })
-              .start(this.moveToTrash)
+            this.moveCardLeft()
           } else if (gestureState.dx > 200) {
-            Animated
-              .timing(this.state.pan, { toValue: { x: 500, y: 0 }, duration: 200 })
-              .start(this.moveToFavorites)
+            this.moveCardRight()
           }
         }
       },
@@ -131,6 +129,16 @@ class AllCardsScreen extends PureComponent {
   handleConnectivityChange(isConnected) {
     store.dispatch(setIsConnected(isConnected))
   }
+
+  moveCardLeft = () =>
+    Animated
+      .timing(this.state.pan, { toValue: { x: -500, y: 0 }, duration: 200 })
+      .start(this.moveToTrash)
+
+  moveCardRight = () =>
+    Animated
+      .timing(this.state.pan, { toValue: { x: 500, y: 0 }, duration: 200 })
+      .start(this.moveToFavorites)
 
   moveToTrash = () =>
     this.props.moveToTrashRequest(this.moveStack)
@@ -174,6 +182,16 @@ class AllCardsScreen extends PureComponent {
     }
   }
 
+  handleTrash = () =>
+    Animated
+      .timing(this.state.pan, { toValue: { x: -200, y: 0 }, duration: 200 })
+      .start()
+
+  handleFavorites = () =>
+    Animated
+      .timing(this.state.pan, { toValue: { x: 200, y: 0 }, duration: 200 })
+      .start()
+
   renderContent = () => {
     if (this.props.isLoading) {
       return (
@@ -185,7 +203,7 @@ class AllCardsScreen extends PureComponent {
         </LoaderContainer>
       )
     } else {
-      const { photos, isLoading } = this.props
+      const { photos } = this.props
 
       return (
         <CardsContainer>
@@ -334,6 +352,16 @@ class AllCardsScreen extends PureComponent {
                 </NoPhotos>
               )
           }
+          <ButtonTrash
+            animatedValue={this.state.pan}
+            onPressIn={this.handleTrash}
+            onPressOut={this.moveCardLeft}
+          />
+          <ButtonFavorite
+            animatedValue={this.state.pan}
+            onPressIn={this.handleFavorites}
+            onPressOut={this.moveCardRight}
+          />
         </CardsContainer>
       )
     }

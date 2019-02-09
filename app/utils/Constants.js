@@ -2,6 +2,7 @@ const app_name = 'CardsStack'
 
 class Screens {
   ALL_CARDS_SCREEN = `${app_name}.AllCardsScreen`
+  FAVORITES_SCREEN = `${app_name}.FavoritesScreen`
 }
 
 class Colors {

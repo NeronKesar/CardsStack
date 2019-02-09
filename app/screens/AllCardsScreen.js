@@ -18,7 +18,7 @@ import { setIsConnected } from '../redux/internet'
 const Container = styled.View`
   flex: 1;
   background-color: ${Constants.colors.WHITE};
-  padding-top: 30px;
+  padding-top: ${isIphoneX() ? 50 : 30}px;
 `
 
 const LoaderContainer = styled.View`
@@ -352,23 +352,35 @@ class AllCardsScreen extends Component {
                 </NoPhotos>
               )
           }
-          <ButtonTrash
-            animatedValue={this.state.pan}
-            onPressIn={this.handleTrash}
-            onPressOut={this.moveCardLeft}
-          />
-          <ButtonFavorite
-            animatedValue={this.state.pan}
-            onPressIn={this.handleFavorites}
-            onPressOut={this.moveCardRight}
-          />
+          {
+            photos.length
+              ? (
+                <ButtonTrash
+                  animatedValue={this.state.pan}
+                  onPressIn={this.handleTrash}
+                  onPressOut={this.moveCardLeft}
+                />
+              )
+              : null
+          }
+          {
+            photos.length
+              ? (
+                <ButtonFavorite
+                  animatedValue={this.state.pan}
+                  onPressIn={this.handleFavorites}
+                  onPressOut={this.moveCardRight}
+                />
+              )
+              : null
+          }
         </CardsContainer>
       )
     }
   }
 
   render() {
-    const { isLoading, photos, history } = this.props
+    const { isLoading, photos, history, favorites } = this.props
 
     return (
       <Container>
@@ -379,6 +391,8 @@ class AllCardsScreen extends Component {
             || this.state.userActionsDisabled
           }
           onUndoPress={this.handleUndo}
+          favoritesDisabled={favorites.length === 0}
+          onFavoritesPress={() => this.props.navigator.showModal({ screen: Constants. screens.FAVORITES_SCREEN })}
         />
         {this.renderContent()}
         <BottomText>

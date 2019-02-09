@@ -17,7 +17,13 @@ const Text = styled.Text`
 `
 const Button = styled.TouchableOpacity``
 
-const Header = ({ undoActive, undoDisabled, onUndoPress }) => {
+const Header = ({
+  undoActive,
+  undoDisabled,
+  onUndoPress,
+  favoritesDisabled,
+  onFavoritesPress,
+}) => {
   return (
     <Container>
       <Button
@@ -44,11 +50,18 @@ const Header = ({ undoActive, undoDisabled, onUndoPress }) => {
       >
         My Mars
       </Text>
-      <Button>
+      <Button
+        disabled={favoritesDisabled}
+        onPress={onFavoritesPress}
+      >
         <Icon
           name="heart"
           size={28}
-          color={Constants.colors.RED}
+          color={
+            favoritesDisabled
+              ? Constants.colors.GRAY
+              : Constants.colors.RED
+          }
         />
       </Button>
     </Container>

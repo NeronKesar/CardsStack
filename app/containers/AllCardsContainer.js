@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {
   getPhotos,
   getHistory,
+  getFavorites,
   getIsLoading,
   getPhotosRequest,
   moveToTrashRequest,
@@ -14,6 +15,7 @@ import AllCardsScreen from '../screens/AllCardsScreen'
 const mapStateToProps = R.applySpec({
   photos: getPhotos,
   history: getHistory,
+  favorites: getFavorites,
   isLoading: getIsLoading,
 })
 
